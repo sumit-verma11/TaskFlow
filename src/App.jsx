@@ -15,9 +15,17 @@ function loadTodos() {
   }
 }
 
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning! 🌅';
+  if (hour < 18) return 'Good afternoon! ☀️';
+  return 'Good evening! 🌙';
+}
+
 function App() {
   const [todos, setTodos] = useState(loadTodos);
   const [filter, setFilter] = useState('All');
+  const greeting = getGreeting();
 
   // Persist to localStorage on every change
   useEffect(() => {
@@ -69,19 +77,25 @@ function App() {
     <div className="app-wrapper" id="app-wrapper">
       {/* Header */}
       <header className="app-header">
+        <div className="greeting-text">{greeting}</div>
         <h1 className="app-logo">Taskflow</h1>
-        <p className="app-tagline">Organize your day, amplify your life.</p>
+        <p className="app-tagline">crush your goals. touch grass later.</p>
 
-        {/* Stats */}
-        <div className="stats-row">
-          <div className="stat-pill">
-            📋 Total <span className="stat-value">{todos.length}</span>
-          </div>
-          <div className="stat-pill">
-            ✅ Done <span className="stat-value">{completedCount}</span>
-          </div>
-          <div className="stat-pill">
-            🔥 Active <span className="stat-value">{todos.length - completedCount}</span>
+        {/* 3D Stats Container */}
+        <div className="stats-container">
+          <div className="stats-row">
+            <div className="stat-pill">
+              <span>Vibes</span>
+              <span className="stat-value">{todos.length}</span>
+            </div>
+            <div className="stat-pill">
+              <span>W's</span>
+              <span className="stat-value">{completedCount}</span>
+            </div>
+            <div className="stat-pill">
+              <span>Grind</span>
+              <span className="stat-value">{todos.length - completedCount}</span>
+            </div>
           </div>
         </div>
 
@@ -95,15 +109,17 @@ function App() {
               />
             </div>
             <div className="progress-label">
-              <span>Progress</span>
-              <span>{progressPercent}% complete</span>
+              <span>Main Quest</span>
+              <span>{progressPercent === 100 ? 'Goated! 🐐' : `${progressPercent}% clear`}</span>
             </div>
           </div>
         )}
       </header>
 
       {/* Add Todo Form */}
-      <AddTodo onAdd={addTodo} />
+      <div className="add-todo-container">
+        <AddTodo onAdd={addTodo} />
+      </div>
 
       {/* Filter Bar */}
       {todos.length > 0 && (
@@ -116,12 +132,14 @@ function App() {
         />
       )}
 
-      {/* Todo List */}
-      <TodoList
-        todos={filteredTodos}
-        onToggle={toggleTodo}
-        onDelete={deleteTodo}
-      />
+      {/* Todo List Container */}
+      <div className="todo-list-container">
+        <TodoList
+          todos={filteredTodos}
+          onToggle={toggleTodo}
+          onDelete={deleteTodo}
+        />
+      </div>
     </div>
   );
 }
